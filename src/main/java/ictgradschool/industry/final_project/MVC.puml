@@ -1,0 +1,80 @@
+@startuml
+
+package "Models" {
+    class Product {
+        +String id
+        +String name
+        +String description
+        +double price
+        +int quantity
+    }
+    class InventoryModel {
+        +void addProduct(Product product)
+        +void removeProduct(String productId)
+        +Product getProduct(String productId)
+        +void updateProduct(Product product)
+    }
+    class CartModel {
+        +void addItem(Product product, int quantity)
+        +void removeItem(String productId)
+        +double getTotalPrice()
+    }
+    class FileStore {
+        +void saveInventory(List<Product> products)
+        +List<Product> loadInventory()
+    }
+}
+
+package "Views" {
+    class AppFrame {
+        +void showWelcomePanel()
+        +void showInventoryManager()
+        +void showPointOfSale()
+    }
+    class WelcomePanel {
+        +void displayOptions()
+    }
+    class InventoryManager {
+        +void displayProducts(List<Product> products)
+        +void updateProductDisplay(Product product)
+    }
+    class PointOfSale {
+        +void displayAvailableProducts(List<Product> products)
+        +void updateCartDisplay()
+    }
+}
+
+package "Controllers" {
+    class Main {
+        +static void main(String[] args)
+    }
+    class InventoryController {
+        +void addNewProduct()
+        +void deleteProduct(String productId)
+        +void editProduct(Product product)
+    }
+    class SaleController {
+        +void addItemToCart(Product product)
+        +void removeItemFromCart(String productId)
+        +void checkout()
+    }
+    class FileController {
+        +void saveData()
+        +void loadData()
+    }
+}
+
+Main --> AppFrame
+AppFrame --> WelcomePanel
+AppFrame --> InventoryManager
+AppFrame --> PointOfSale
+
+InventoryController .right.> InventoryModel : uses
+SaleController .right.> CartModel : uses
+FileController .right.> FileStore : uses
+
+InventoryManager ..> InventoryModel : data
+PointOfSale ..> CartModel : data
+WelcomePanel ..> FileStore : data
+
+@enduml
